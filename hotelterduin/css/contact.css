@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+:root {
+    --dominante: #0f6fef;
+    --secundaire: #4276bc;
+    --accent: #0093be;
+    --forms: #e1e6ee;
+    --wit: #ffffff;
+    --tekstkleur: #000;
+    font-size: 16px;
+}
+
+* {
+    padding: 0px 8px 0px 8px;
+}
+
+body {
+    font-family: Roboto, sans-serif;
+    font-weight: 200;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--tekstkleur);
+    height: 100vh;
+    display: grid;
+    place-items: center;
+}
+
+h2 {
+    color: yellow;
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+.accordion {
+    width: 100%;
+}
+
+.vraag {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    opacity: 80%;
+}
+
+.antwoord {
+    width: 100%;
+    height: auto;
+    display: none;
+    background-color: var(--wit);
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+.vraag label {
+    width: 100%;
+    cursor: pointer;
+    background-color: #000;
+    color: #fff;
+    transition: background-color ease 2.10s;
+}
+
+.vraag [type="checkbox"] {
+    display: none;
+}
+
+.vraag [type="checkbox"]:checked+label {
+    background-color: #fff;
+    color: #0067b8;
+    border-top: 4px solid #0067b8;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+.vraag [type="checkbox"]:checked+label+.antwoord {
+    display: block;
+}
+
+/* form container */
+body {
+    width: auto;
+    background-image: url("https://source.unsplash.com/random?soccer team");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: Roboto, sans-serif;
+    font-weight: 200;
+    font-size: 14px;
+    height:100%;
+    line-height: 1.5;
+    color: var(--tekstkleur);
+    display: grid;
+    place-items: center;
+}
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+  }
+  input[type="submit"] {
+    background-color: mediumslateblue;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  input[type="submit"]:hover {
+    background-color: mediumblue;
+  }
+  
+  /* input controls section header */
+  form h3 {
+    font-size: 24px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    color: var(--dominante);
+  }
+
+  .formulier {
+    border-color: aqua;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    background-color: lightblue;
+  }
+  
+
+/* dropdown menus */
+select {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #e6e6e6;
+}
+
+/* profile */
+
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    opacity: 80%;
+}
+
+
+
+.profile label {
+    width: 100%;
+    cursor: pointer;
+    background-color: #000;
+    color: #fff;
+    transition: background-color ease 2.10s;
+}
+
+.profile [type="checkbox"] {
+    display: none;
+}
+
+.profile [type="checkbox"]:checked+label {
+    background-color: #fff;
+    color: #0067b8;
+    border-top: 4px solid #0067b8;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+.profile [type="checkbox"]:checked+label+.pro {
+    display: block;
+}
+
+
+.pro {
+    width: 100%;
+    height: auto;
+    display: none;
+    background-color: var(--wit);
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.4);
+}
