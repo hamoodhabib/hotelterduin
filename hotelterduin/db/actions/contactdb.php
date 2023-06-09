@@ -1,26 +1,29 @@
 <?php
 
 // connect to the database
-require_once 'config.php';
+require_once '../config.php';
 $db = new Db();
 $PDO = $db->getPDO();
 
 // check if the form has been submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // get form data and insert into database
-    $naam = $_POST['naam'];
+    $name = $_POST['name'];
     $email = $_POST['email'];
-    $vraag = $_POST['vraag'];
+    $phone = $_POST['phone'];
+    $message = $_POST['message'];
+    
     try {
-        $stmt = $PDO->prepare("INSERT INTO contact (naam, email, vraag) VALUES (:naam, :email, :vraag)");
-        $stmt->bindParam(':naam', $naam);
+        $stmt = $PDO->prepare("INSERT INTO Contacts (name, email, phone, message) VALUES (:name, :email, :phone, :message)");
+        $stmt->bindParam(':name', $name);
         $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':vraag', $vraag);
+        $stmt->bindParam(':phone', $phone);
+        $stmt->bindParam(':message', $message);
         $stmt->execute();
-        header('Location: ../php/contact.php?success=true');
+        header('Location: ../../php/clientside/contact.php');
     } catch (PDOException $e) {
         echo 'Error: ' . $e->getMessage();
-        header('Location: ../php/contact.php?error=true');
+        header('Location: ../../php/clientside/contact.php');
     }
 }
 

@@ -1,5 +1,12 @@
 <?php
+
 session_start();
+
+require_once '../../db/config.php';
+
+$db = new Db();
+$PDO = $db->getPDO();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,45 +19,31 @@ session_start();
 
 <body>
 <header>
-        <?php  include '../../templates/navbar.php' ?>
-    </header>
+    <?php include '../../templates/navbar.php' ?>
+</header>
 
-    <main>
-    <main>
+<main>
+    <?php if (isset($error)) : ?>
+        <p><?php echo $error; ?></p>
+    <?php endif; ?>
 
-<?php if (isset($error)) : ?>
-<p><?php echo $error; ?></p>
-
-<?php endif; ?>
-
-
-<div class="formulier">
-<center>
-
-
-<h1>Log in</h1>
-<br>
-    
-    <form action="../../db/actions/inlog.php" method="post">
-        <div class="formulier-text">
-    <input type="text" name="voornaam" placeholder="Username">
-    <br/><br/>
-    <input type="password" name="password" placeholder="Password">
-    <br/><br/>
-    <input type="submit" name="submit" value="Log-in">
+    <div class="formulier">
+        <center>
+            <h1>Log in</h1>
+            <br>
+            <form action="../../db/actions/inlog.php" method="post">
+                <div class="formulier-text">
+                    <input type="text" name="username" placeholder="Username" required>
+                    <br/><br/>
+                    <input type="password" name="password" placeholder="Password" required>
+                    <br/><br/>
+                    <input type="submit" name="submit" value="Log in">
+                </div>
+            </form>
+            <br>
+            <p>Don't have an account? <a href="register.php">Register</a></p>
+        </center>
     </div>
-    </form>
-    <br>
-    <p>Geen account? <a href="register.php">Registreer</a></p>
-    <br>
-    <h3>Zonder account kunt u niet bestellen!</h3>    
-    </main>
-
-
-</center>
-</div>
-
-    
+</main>
 </body>
-
 </html>

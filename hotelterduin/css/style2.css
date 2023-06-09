@@ -56,7 +56,7 @@
   
   /* Hero section styles */
   .hero {
-	background-image: url('https://source.unsplash.com/random?soccer');
+	/* background-image: url('https://source.unsplash.com/random?soccer'); */
 	background-size: cover;
 	background-position: center;
 	height: 500px;

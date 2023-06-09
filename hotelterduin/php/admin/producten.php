@@ -2,99 +2,75 @@
 
 session_start();
 
+require_once '../../db/config.php';
+
+$db = new Db();
+$PDO = $db->getPDO();
 ?>
 
 <!DOCTYPE html>
+<html>
 
 <head>
-    <title>Hamood</title>
+    <title>Admin Reservations</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
 </head>
 
 <body>
     <header>
-        <?php  include '../../templates/navbar.php' ?>
+        <?php include '../../templates/navbar.php'; ?>
     </header>
     <br>
-        <main>
+    <main>
         <article>
-        <?php 
-                    
-                    
-        try {
-            $sql = "SELECT * FROM product";
-            $stmt = $PDO->prepare($sql);
-            $stmt->execute();
-            $kolommen = $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            echo $e->getMessage();
-        }
-
-                    $bgcolor = true;
-                    $stmt->execute();
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {  ?>
-        <h1><img src="data:image/png;base64,<?php echo $row['foto']; ?>" alt="Productfoto" width="50%" height="50%">  </h1>
-        <br><br>    
-        <div class="formulier">  
+            <?php 
             
-           
-
-        <form method="post" enctype="multipart/form-data" action="../../db/actions/productwijzigen.php">
-        <div class="formulier-text">
-        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-        <label for="naam">Naam:</label>
-        <input type="text" name="naam" value="<?php echo $row['naam']; ?>" required>
-        <br><br>
-        <label for="prijs">Prijs:</label>
-        <input type="number" name="prijs" value="<?php echo $row['prijs']; ?>" required>
-        <br><br>
-        <label for="foto">Foto:</label>
-        <input type="file" name="foto" value="<?php echo $row['foto']; ?>"required>
-        <br><br>
-        <label for="voorraad">Voorraad:</label>
-        <input type="number" name="voorraad" value="<?php echo $row['voorraad']; ?>" required>
-        <br><br>
-        <input type="submit" name="submit" value="Product Wijzigen">
-    </form>
-
-                <form action="../../db/actions/productverwijderen.php" method="post">
-                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                <br>
-                <input type="submit" name="submit" value="Verwijder product">
-            </div>
-        </form>
-        </div>
-            <?php  $bgcolor = ($bgcolor ? false : true);
-        } ?>
+            try {
+                $sql = "SELECT * FROM reservations";
+                $stmt = $PDO->prepare($sql);
+                $stmt->execute();
+                $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                echo $e->getMessage();
+            }
+            foreach ($reservations as $reservation) { ?>
+                <div class="formulier">
+                    <form action="../../db/actions/productverwijderen.php" method="post">
+                        <div class="formulier-text">
+                            <input type="hidden" name="reservation_id" value="<?php echo $reservation['id']; ?>">
+                            <br><br>
+                            <label for="room_type">Room Type:</label>
+                            <input type="text" name="room_type" value="<?php echo $reservation['room_type']; ?>">
+                            <br><br>
+                            <label for="check_in_date">Check-in Date:</label>
+                            <input type="text" name="check_in_date" value="<?php echo $reservation['check_in_date']; ?>">
+                            <br><br>
+                            <label for="check_out_date">Check-out Date:</label>
+                            <input type="text" name="check_out_date" value="<?php echo $reservation['check_out_date']; ?>">
+                            <br><br>
+                            <label for="first_name">First Name:</label>
+                            <input type="text" name="first_name" value="<?php echo $reservation['first_name']; ?>">
+                            <br><br>
+                            <label for="last_name">Last Name:</label>
+                            <input type="text" name="last_name" value="<?php echo $reservation['last_name']; ?>">
+                            <br><br>
+                            <label for="email">Email:</label>
+                            <input type="text" name="email" value="<?php echo $reservation['email']; ?>">
+                            <br><br>
+                            <label for="phone">Phone:</label>
+                            <input type="text" name="phone" value="<?php echo $reservation['phone']; ?>">
+                            <br /><br />
+                            <input type="submit" name="submit" value="Update Reservation">
+                            <br><br>
+                            <input type="submit" name="submit" value="Delete Reservation">
+                        </div>
+                    </form>
+                </div>
+            <?php } ?>
         </article>
-    <br>
-    <br>
-    <article>
-    <div class="formulier">
-    <h2>Product toevoegen</h2>
-    <br><br>
-        <form method="post" enctype="multipart/form-data" action="../../db/actions/producttoevoegen.php">
-        <div class="formulier-text">
-        <label for="naam">Naam:</label>
-        <input type="text" name="naam" required>
         <br>
-        <label for="prijs">Prijs:</label>
-        <input type="number" name="prijs" required>
-        <br>
-        <label for="foto">Foto:</label>
-        <input type="file" name="foto" required>
-        <br>
-        <label for="voorraad">Voorraad:</label>
-        <input type="number" name="voorraad" required>
-        <br>
-        <input type="submit" name="submit" value="Product Toevoegen">
-    </form>
-    </div>
-    </div>
-    </article>
-        </main>
-  </body>
+    </main>
+</body>
 
 </html>

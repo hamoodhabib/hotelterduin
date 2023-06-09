@@ -78,7 +78,7 @@ h2 {
 /* form container */
 body {
     width: auto;
-    background-image: url("https://source.unsplash.com/random?soccer team");
+    /* background-image: url("https://source.unsplash.com/random?soccer team"); */
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
