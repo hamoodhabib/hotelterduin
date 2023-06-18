@@ -7,9 +7,9 @@ $db = new Db();
 $PDO = $db->getPDO();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $deleteId = $_POST['login_id'];
+    $deleteId = $_POST['user_id'];
 
-    $stmt = $PDO->prepare("DELETE FROM Login WHERE login_id = :id");
+    $stmt = $PDO->prepare("DELETE FROM users WHERE user_id = :id");
     $stmt->bindParam(':id', $deleteId);
 
     try {

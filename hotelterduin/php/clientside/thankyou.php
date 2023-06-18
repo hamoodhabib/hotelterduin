@@ -6,24 +6,38 @@ require_once '../../db/config.php';
 $db = new Db();
 $PDO = $db->getPDO();
 
-try {
-    $sql = "SELECT * FROM rooms";
-    $stmt = $PDO->prepare($sql);
-    $stmt->execute();
-    $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo $e->getMessage();
-}
+$user_id = $_SESSION['user_id'];
 
+try {
+    $invoiceSql = "SELECT r.check_in_date, r.check_out_date, u.username, u.address, u.email, u.phone, rt.room_type
+                   FROM reservations AS r
+                   INNER JOIN users AS u ON r.user_id = u.user_id
+                   INNER JOIN rooms AS rt ON r.room_id = rt.room_id
+                   WHERE u.user_id = :user_id";
+    $invoiceStmt = $PDO->prepare($invoiceSql);
+    $invoiceStmt->bindParam(':user_id', $user_id);
+    $invoiceStmt->execute();
+    $invoices = $invoiceStmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <title>Thank You</title>
+    <title>Invoice</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
+    <style>
+        @media print {
+            .print-button,
+            header {
+                display: none;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -32,20 +46,23 @@ try {
     </header>
 
     <main class="main">
-        <h1>Thank You for Your Reservation</h1>
-        <p>Your reservation has been successfully submitted. We look forward to welcoming you at our hotel.</p>
-        <p>Please find below the details of your reservation:</p>
+        <?php $counter = 1; ?>
+        <?php foreach ($invoices as $invoice) { ?>
+        <h1>Invoice <?php echo $counter; ?></h1>
         <ul>
-            <li>Room Type: <?php echo $reservation['room_type']; ?></li>
-            <li>Check-in Date: <?php echo $reservation['check_in_date']; ?></li>
-            <li>Check-out Date: <?php echo $reservation['check_out_date']; ?></li>
-            <li>First Name: <?php echo $reservation['first_name']; ?></li>
-            <li>Last Name: <?php echo $reservation['last_name']; ?></li>
-            <li>Email: <?php echo $reservation['email']; ?></li>
-            <li>Phone: <?php echo $reservation['phone']; ?></li>
+            <li>Username: <?php echo $invoice['username']; ?></li>
+            <li>Address: <?php echo $invoice['address']; ?></li>
+            <li>Email: <?php echo $invoice['email']; ?></li>
+            <li>Phone: <?php echo $invoice['phone']; ?></li>
+            <li>Room Type: <?php echo $invoice['room_type']; ?></li>
+            <li>Check-in Date: <?php echo $invoice['check_in_date']; ?></li>
+            <li>Check-out Date: <?php echo $invoice['check_out_date']; ?></li>
         </ul>
+        <hr>
+            <?php $counter++; ?>
+        <?php } ?>
 
-        <button onclick="window.print()">Print Reservation</button>
+        <button class="print-button" onclick="window.print()">Print Invoice</button>
     </main>
 </body>
 

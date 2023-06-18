@@ -43,6 +43,12 @@ $PDO = $db->getPDO();
                     <br/><br/>
                     <input type="password" name="confirm_password" placeholder="Confirm Password" required>
                     <br/><br/>
+                    <input type="text" name="address" placeholder="Address" required>
+                    <br/><br/>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <br/><br/>
+                    <input type="tel" name="phone" placeholder="Phone" required>
+                    <br/><br/>
                     <input type="submit" name="submit" value="Register">
                 </div>
             </form>

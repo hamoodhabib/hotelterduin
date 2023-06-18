@@ -4,76 +4,91 @@ session_start();
 
 require_once '../../db/config.php';
 
-
 $db = new Db();
 $PDO = $db->getPDO();
 
-$ID = $_GET['id'];
-
-// Query om de rij te selecteren die overeenkomt met het sessie-ID
-$sql = "SELECT * FROM klant WHERE id = :id";
-$stmt = $PDO->prepare($sql);
-$stmt->execute(['id' => $ID]);
-$klant = $stmt->fetch();
-
-
-// Het ingevulde formulier verwerken
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $id = $klant['id'];
-    $voornaam = $_POST['voornaam'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $adres = $_POST['adres'];
-    $postcode = $_POST['postcode'];
-    $woonplaats = $_POST['woonplaats'];
-    $email = $_POST['email'];
-
-    // Query om de informatie van de gebruiker bij te werken
-    $sql = "UPDATE klant SET voornaam = :voornaam, password = :password, adres = :adres, postcode = :postcode, woonplaats = :woonplaats, email = :email WHERE id = :id";
-    $stmt = $PDO->prepare($sql);
-    $stmt->execute(['voornaam' => $voornaam, 'password' => $password, 'adres' => $adres, 'postcode' => $postcode, 'woonplaats' => $woonplaats, 'email' => $email, 'id' => $id]);
-
-    session_start();
-    unset($_SESSION['voornaam']);
-    session_destroy();
-    header('Location: ../../php/clientside/login.php');
-    // exit();
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit;
 }
+
+// Retrieve user information from the users table
+$username = $_SESSION['username'];
+$sql = "SELECT * FROM users WHERE username = :username";
+$stmt = $PDO->prepare($sql);
+$stmt->bindParam(':username', $username);
+$stmt->execute();
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Check if user exists
+if (!$user) {
+    // Redirect or handle the case when user doesn't exist
+    exit;
+}
+
+// Handle form submission
+if (isset($_POST['submit'])) {
+    // Retrieve the updated information from the form
+    $newUsername = $_POST['username'];
+    $newPassword = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $newAddress = $_POST['address'];
+    $newEmail = $_POST['email'];
+    $newPhone = $_POST['phone'];
+
+    // Update user information in the users table
+    $updateSql = "UPDATE users SET username = :username, password = :password, address = :address, email = :email, phone = :phone WHERE username = :currentUsername";
+    $updateStmt = $PDO->prepare($updateSql);
+    $updateStmt->bindParam(':username', $newUsername);
+    $updateStmt->bindParam(':password', $newPassword);
+    $updateStmt->bindParam(':address', $newAddress);
+    $updateStmt->bindParam(':email', $newEmail);
+    $updateStmt->bindParam(':phone', $newPhone);
+    $updateStmt->bindParam(':currentUsername', $username);
+    $updateStmt->execute();
+
+    // Update the session variable with the new username
+    $_SESSION['username'] = $newUsername;
+
+    // Redirect to a success page or display a success message
+    header("Location: homepage.php?success=Profile updated successfully");
+    exit;
+}
+
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <title>Gegevens</title>
+    <title>Edit Profile</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
 </head>
+
 <body>
     <header>
-        <?php include '../../templates/navbar.php' ?>
+        <?php include '../../templates/navbar.php'; ?>
     </header>
-    <main>
-        <div class="formulier">
-            <form action="#" method="POST">
-                <div class="formulier-text">
-                    <h2>Edit Account</h2>
-                    <p>Username</p>
-                    <input type="text" name="voornaam"value="<?php echo $klant['voornaam'] ?>" required>
-                    <p>Password</p>
-                    <input type="password" name="password" placeholder="*****" required>
-                    <p>Address</p>
-                    <input type="text" name="adres"value="<?php echo $klant['adres'] ?>" required>
-                    <p>Postal Code</p>
-                    <input type="text" name="postcode"value="<?php echo $klant['postcode'] ?>" required>
-                    <p>City</p>
-                    <input type="text" name="woonplaats"value="<?php echo $klant['woonplaats']?>" required>
-                    <p>E-mail</p>
-                    <input type="email" name="email"value="<?php echo $klant['email']?>" required>
-                    <br><br><br>
-                    <input type="submit" name="submit" value="Save Changes">
-                </div>
-            </form>
-        </div>
-    </main>
+    <h1>Edit Profile</h1>
+    <form action="" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" value="<?php echo $user['username']; ?>" required>
+        <br><br>
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter new password" required>
+        <br><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" value="<?php echo $user['address']; ?>" required>
+        <br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="<?php echo $user['email']; ?>" required>
+        <br><br>
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone" value="<?php echo $user['phone']; ?>" required>
+        <br><br>
+        <input type="submit" name="submit" value="Update Profile">
+    </form>
 </body>
+
 </html>

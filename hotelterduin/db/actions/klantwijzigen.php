@@ -6,16 +6,22 @@ $db = new Db();
 $PDO = $db->getPDO();
 
 if (isset($_POST['submit'])) {
-    $loginId = $_POST['login_id'];
+    $userId = $_POST['user_id'];
     $username = $_POST['username'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $address = $_POST['address'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
 
-    $sql = "UPDATE Login SET username=:username, password=:password WHERE login_id=:login_id";
+    $sql = "UPDATE users SET username=:username, password=:password, address=:address, email=:email, phone=:phone WHERE user_id=:user_id";
     
     $stmt = $PDO->prepare($sql);
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':password', $password);
-    $stmt->bindParam(':login_id', $loginId);
+    $stmt->bindParam(':address', $address);
+    $stmt->bindParam(':email', $email);
+    $stmt->bindParam(':phone', $phone);
+    $stmt->bindParam(':user_id', $userId);
 
     try {
         $stmt->execute();

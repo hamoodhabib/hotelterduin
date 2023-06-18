@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (isset($_SESSION['user_id'])) {
@@ -16,6 +17,9 @@ if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm_password'];
+    $address = $_POST['address'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
 
     // Validate input
     $errors = [];
@@ -30,8 +34,8 @@ if (isset($_POST['submit'])) {
     }
 
     if (empty($errors)) {
-        // Check if the username already exists in the Login table
-        $stmt = $PDO->prepare("SELECT * FROM Login WHERE username = :username");
+        // Check if the username already exists in the users table
+        $stmt = $PDO->prepare("SELECT * FROM users WHERE username = :username");
         $stmt->bindParam(':username', $username);
         $stmt->execute();
 
@@ -40,12 +44,15 @@ if (isset($_POST['submit'])) {
         if ($user) {
             $errors[] = 'Username already exists';
         } else {
-            // Insert the new user into the Login table
+            // Insert the new user into the users table
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $stmt = $PDO->prepare("INSERT INTO Login (username, password, user_type) VALUES (:username, :password, 'customer')");
+            $stmt = $PDO->prepare("INSERT INTO users (username, password, role, address, email, phone) VALUES (:username, :password, 'customer', :address, :email, :phone)");
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':password', $hashedPassword);
+            $stmt->bindParam(':address', $address);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':phone', $phone);
             $stmt->execute();
 
             // Redirect to login page after successful registration

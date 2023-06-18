@@ -1,6 +1,25 @@
 <?php
 session_start();
+
+require_once '../../db/config.php';
+
+$db = new Db();
+$PDO = $db->getPDO();
+
+$user_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
+
+if ($user_id) {
+    try {
+        $stmt = $PDO->prepare("SELECT * FROM Contacts WHERE user_id = :user_id");
+        $stmt->bindParam(':user_id', $user_id);
+        $stmt->execute();
+        $userMessages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,62 +30,41 @@ session_start();
 </head>
 
 <body>
-<header>
-    <?php  include '../../templates/navbar.php' ?>
-</header>
-<main>
-    <article>
-        <div class="formulier">
-            <center>
-                <form method="post" action="../../db/actions/contactdb.php">
-                    <h1>Contacteer ons!</h1>
-                    <label for="name">Naam</label>
-                    <input type="text" id="name" name="name" placeholder="Uw naam.." required><br><br>
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Uw email.." required><br><br>
-                    <label for="phone">Telefoon</label>
-                    <input type="tel" id="phone" name="phone" placeholder="Uw telefoonnummer.." required><br><br>
-                    <label for="message">Vragen?</label>
-                    <textarea id="message" name="message" placeholder="Stel uw vraag hier.." style="height:200px" required></textarea><br><br>
-                    <input type="submit" value="Submit">
-                </form>
-            </center>  
-        </div>
-    </article>
+    <header>
+        <?php include '../../templates/navbar.php'; ?>
+    </header>
+    <main>
+        <article>
+            <div class="formulier">
+                <center>
+                    <form method="post" action="../../db/actions/contactdb.php">
+                        <h1>Contacteer ons!</h1>
+                        <label for="name">Naam</label>
+                        <input type="text" id="name" name="name" placeholder="Uw naam.." required><br><br>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Uw email.." required><br><br>
+                        <label for="phone">Telefoon</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Uw telefoonnummer.." required><br><br>
+                        <label for="message">Vragen?</label>
+                        <textarea id="message" name="message" placeholder="Stel uw vraag hier.." style="height:200px" required></textarea><br><br>
+                        <input type="submit" value="Submit">
+                    </form>
+                </center>  
+            </div>
+        </article>
+    </main>
+
     <br><br>
-    <div class="formulier">
-        <center>
-            <h2>Mensen vragen ook:</h2>
-            <div class="vraag">
-                <input type="checkbox" name="vraag1" id="vraag1" />
-                <label for="vraag1">Vraag 1: </label>
-                <div class="antwoord">
-                    <p>Lorem ipsum dolor sit amet consectetur adipsicing elit. Cumque nobis dolores ipsum expedita
-                        nisi ratione
-                    </p>
-                </div>
-            </div>
-            <div class="vraag">
-                <input type="checkbox" name="vraag2" id="vraag2" />
-                <label for="vraag2">Vraag 2</label>
-                <div class="antwoord">
-                    <p>Lorem ipsum dolor sit amet consectetur adipsicing elit. Cumque nobis dolores ipsum expedita
-                        nisi ratione
-                    </p>
-                </div>
-            </div>
-            <div class="vraag">
-                <input type="checkbox" name="vraag3" id="vraag3" />
-                <label for="vraag3">Vraag 3</label>
-                <div class="antwoord">
-                    <p>Lorem ipsum dolor sit amet consectetur adipsicing elit. Cumque nobis dolores ipsum expedita
-                        nisi ratione
-                    </p>
-                </div>
-            </div>
-        </center>
-    </div>
-</main>
+    <footer>
+        <div class="contact-info">
+            <h2>Contact Informatie</h2>
+            <p><strong>Hotel Address:</strong> Koningin Astrid Boulevard 5 -1, 2202 BK Noordwijk aan Zee, Nederland</p>
+            <p><strong>Telephone:</strong> +31 12 34 56 78</p>
+            <p><strong>Email:</strong> hotelterduin@hotmail.nl</p>
+            <p><strong>Postal Address:</strong> 1234 XD Amsterdam</p>
+        </div>
+    </footer>
+
 </body>
 
 </html>
