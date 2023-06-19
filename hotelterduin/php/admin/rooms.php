@@ -37,6 +37,21 @@ if (isset($_POST['add'])) {
     exit;
 }
 
+// Handle room removal
+if (isset($_POST['remove'])) {
+    $roomID = $_POST['room_id'];
+
+    // Delete the room from the rooms table
+    $deleteSql = "DELETE FROM rooms WHERE room_id = :roomID";
+    $deleteStmt = $PDO->prepare($deleteSql);
+    $deleteStmt->bindParam(':roomID', $roomID);
+    $deleteStmt->execute();
+
+    // Redirect to a success page or display a success message
+    header("Location: rooms.php?success=Room removed successfully");
+    exit;
+}
+
 // Fetch all rooms from the database
 $sql = "SELECT * FROM rooms";
 $stmt = $PDO->prepare($sql);

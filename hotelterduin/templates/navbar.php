@@ -20,12 +20,15 @@
                         <a class="menu_item <?php echo ($currentURL === '#') ? 'current' : ''; ?>" href="#"><?php echo $_SESSION['username']?> &#9662;</a>
                         <ul class="dropdown-menu">
                             <?php if ($_SESSION['role'] == 'employee') : ?>
-                                <li><a href="../admin/klanten.php">Klanten</a></li>
-                                <li><a href="../admin/reservaties.php">Reservation</a></li>
-                                <li><a href="../admin/rooms.php">Rooms</a></li>
+                                <li><a href="../admin/klanten.php">All Users</a></li>
+                                <br>
+                                <li><a href="../admin/reservaties.php">All Reservation</a></li>
+                                <br>
+                                <li><a href="../admin/rooms.php">Add Rooms</a></li>
                             <?php else : ?>
-                                <li><a href="../clientside/gegevens.php?id=<?php echo $_SESSION['user_id'];?>">Gegevens</a></li>
-                                <li><a href="../clientside/reservatie.php?id=<?php echo $_SESSION['user_id'];?>">Reservation</a></li>
+                                <li><a href="../clientside/gegevens.php?id=<?php echo $_SESSION['user_id'];?>">My Settings</a></li>
+                                <br><br>
+                                <li><a href="../clientside/reservatie.php?id=<?php echo $_SESSION['user_id'];?>">My Reservations</a></li>
                             <?php endif; ?>
                             <li>
                                 <form action="../../db/actions/logout.php" method="post">

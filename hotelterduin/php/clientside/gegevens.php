@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 
 require_once '../../db/config.php';
@@ -51,44 +50,52 @@ if (isset($_POST['submit'])) {
     $_SESSION['username'] = $newUsername;
 
     // Redirect to a success page or display a success message
-    header("Location: homepage.php?success=Profile updated successfully");
+    header("Location: gegevens.php?success=Profile updated successfully");
     exit;
 }
-
 ?>
 
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Edit Profile</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
+    <link rel="stylesheet" href="../../css/gegevens.css">
 </head>
 
 <body>
     <header>
         <?php include '../../templates/navbar.php'; ?>
     </header>
-    <h1>Edit Profile</h1>
-    <form action="" method="post">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="<?php echo $user['username']; ?>" required>
-        <br><br>
-        <label for="password">New Password:</label>
-        <input type="password" id="password" name="password" placeholder="Enter new password" required>
-        <br><br>
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" value="<?php echo $user['address']; ?>" required>
-        <br><br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" value="<?php echo $user['email']; ?>" required>
-        <br><br>
-        <label for="phone">Phone:</label>
-        <input type="text" id="phone" name="phone" value="<?php echo $user['phone']; ?>" required>
-        <br><br>
-        <input type="submit" name="submit" value="Update Profile">
-    </form>
+    <br><br>
+    <div class="container">
+        <div class="profile-form">
+            <h1>Edit Profile</h1>
+            <form action="" method="post">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" value="<?php echo $user['username']; ?>" required>
+                <br><br>
+                <label for="password">New Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter new password" required>
+                <br><br>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" value="<?php echo $user['address']; ?>" required>
+                <br><br>
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="<?php echo $user['email']; ?>" required>
+                <br><br>
+                <label for="phone">Phone:</label>
+                <input type="text" id="phone" name="phone" value="<?php echo $user['phone']; ?>" required>
+                <br><br>
+                <input type="submit" name="submit" value="Update Profile">
+            </form>
+            <br><br>
+            <form action="delete.php" method="post">
+                <input type="submit" name="submit" value="Delete Profile">
+            </form>
+        </div>
+    </div>
 </body>
 
 </html>

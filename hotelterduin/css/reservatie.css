@@ -1,43 +1,119 @@
-/* reservation.css */
-
-.formulier {
+body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    background-color: darkcyan;
+    position: block;
+    top: 10px;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+  }
+  
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .logo img {
+    width: 100px;
+    height: auto;
+  }
+  
+  .menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .menu li {
+    margin-left: 20px;
+  }
+  
+  .menu_item {
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+  }
+  
+  .menu_item.current {
+    background-color: #fff;
+    color: darkcyan;
+    border-radius: 5px;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: lightblue;
+    border: 1px solid darkcyan;
+    padding: 10px;
+    top: 30px;
+    z-index: 999;
+  }
+  
+  .dropdown:hover .dropdown-menu {
+    display: block;
+  }
+  
+  .dropdown-menu li {
+    margin: 10px 0;
+  }
+  
+  .dropdown-menu a {
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .formulier {
     display: flex;
     margin-bottom: 20px;
-}
-
-.room-image {
+  }
+  
+  .room-image {
     flex: 1;
-}
-
-.room-image img {
+  }
+  
+  .room-image img {
     width: 100%;
     height: auto;
-}
-
-.room-details {
+  }
+  
+  .room-details {
     flex: 2;
     padding: 10px;
-}
-
-.room-details h2 {
+  }
+  
+  .room-details h2 {
     font-size: 24px;
     margin-top: 0;
-}
-
-.room-details p {
+  }
+  
+  .room-details p {
     font-size: 16px;
     margin: 0;
-}
-
-.reservation-actions {
+  }
+  
+  .reservation-actions {
     flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.reservation-actions input[type="submit"] {
+  }
+  
+  .reservation-actions input[type="submit"] {
     padding: 10px 20px;
     background-color: darkcyan;
     color: #fff;
@@ -45,8 +121,9 @@
     cursor: pointer;
     font-size: 16px;
     margin-bottom: 10px;
-}
-
-.reservation-actions input[type="submit"]:hover {
+  }
+  
+  .reservation-actions input[type="submit"]:hover {
     background-color: #00b3b3;
-}
+  }
+  
