@@ -208,6 +208,9 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php } ?>
         </div>
     </div>
+    <footer>
+    <?php include '../../templates/footer.php'; ?> 
+    </footer>
 </body>
 
 </html>

@@ -9,8 +9,12 @@
 <body>
     <header>
         <nav class="navbar">
-            <a class="logo" href="../clientside/homepage.php"><img src="../../images/logo.png" alt="logo"></a>
+            <!-- <a class="logo" href="../clientside/homepage.php"><img src="../../images/logo.png" alt="logo"></a> -->
+            <a class="logo" href="../clientside/homepage.php">
+                <img src="../../images/logo.png" alt="logo">
+            </a>
             <ul class="menu">
+                <li>Hotel ter Duin</li>
                 <li><a class="menu_item <?php echo ($currentURL === '../clientside/homepage.php') ? 'current' : ''; ?>" href="../clientside/homepage.php">Homepage</a></li>
                 <li><a class="menu_item <?php echo ($currentURL === '../clientside/products.php') ? 'current' : ''; ?>" href="../clientside/products.php">Rooms</a></li>
                 <li><a class="menu_item <?php echo ($currentURL === '../clientside/contact.php') ? 'current' : ''; ?>" href="../clientside/contact.php">Contact</a></li>

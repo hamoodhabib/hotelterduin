@@ -38,15 +38,15 @@ if ($user_id) {
             <div class="formulier">
                 <center>
                     <form method="post" action="../../db/actions/contactdb.php">
-                        <h1>Contacteer ons!</h1>
-                        <label for="name">Naam</label>
-                        <input type="text" id="name" name="name" placeholder="Uw naam.." required><br><br>
+                        <h1>Contact Us!</h1>
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Your naam.." required><br><br>
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Uw email.." required><br><br>
-                        <label for="phone">Telefoon</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Uw telefoonnummer.." required><br><br>
-                        <label for="message">Vragen?</label>
-                        <textarea id="message" name="message" placeholder="Stel uw vraag hier.." style="height:200px" required></textarea><br><br>
+                        <input type="email" id="email" name="email" placeholder="Your email.." required><br><br>
+                        <label for="phone">Phone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Your phonenumber.." required><br><br>
+                        <label for="message">Questions?</label>
+                        <textarea id="message" name="message" placeholder="Ask your question here.." style="height:50px" required></textarea><br><br>
                         <input type="submit" value="Submit">
                     </form>
                 </center>  
@@ -56,13 +56,7 @@ if ($user_id) {
 
     <br><br>
     <footer>
-        <div class="contact-info">
-            <h2>Contact Informatie</h2>
-            <p><strong>Hotel Address:</strong> Koningin Astrid Boulevard 5 -1, 2202 BK Noordwijk aan Zee, Nederland</p>
-            <p><strong>Telephone:</strong> +31 12 34 56 78</p>
-            <p><strong>Email:</strong> hotelterduin@hotmail.nl</p>
-            <p><strong>Postal Address:</strong> 1234 XD Amsterdam</p>
-        </div>
+    <?php include '../../templates/footer.php'; ?> 
     </footer>
 
 </body>
