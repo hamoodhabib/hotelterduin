@@ -77,7 +77,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <input type="hidden" name="user_id" value="<?php echo $user['user_id']; ?>" required>
                                 <td><?php echo $user['user_id']; ?></td>
                                 <td><input type="text" name="username" value="<?php echo $user['username']; ?>"></td>
-                                <td><input type="text" name="password" placeholder="<?php echo $user['password']; ?>" required></td>
+                                <td><input type="text" name="password" placeholder="<?php echo $user['password']; ?>"></td>
                                 <td><input type="text" name="address" value="<?php echo $user['address']; ?>"</td>
                                 <td><input type="email" name="email" value="<?php echo $user['email']; ?>"</td>
                                 <td><input type="text" name="phone" value="<?php echo $user['phone']; ?>"</td>
@@ -92,6 +92,17 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </table>
         </div>
     </main>
+    <!-- Add this JavaScript code after the PHP code -->
+<script>
+    // Check if the URL contains the success parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const successMessage = urlParams.get('success');
+
+    if (successMessage) {
+        // Show the success alert
+        alert(successMessage);
+    }
+</script>
 </body>
 
 </html>

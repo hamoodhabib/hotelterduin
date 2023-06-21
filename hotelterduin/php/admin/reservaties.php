@@ -207,6 +207,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </article>
         <br>
     </main>
+    <?php if (isset($_SESSION['success_message'])) { ?>
+        <script>
+            alert("<?php echo $_SESSION['success_message']; ?>");
+        </script>
+        <?php unset($_SESSION['success_message']); ?>
+    <?php } ?>
 </body>
 
 </html>
