@@ -3,6 +3,11 @@
 session_start();
 
 require_once '../../db/config.php';
+require_once '../../../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 $db = new Db();
 $PDO = $db->getPDO();
@@ -19,7 +24,6 @@ if ($_SESSION['role'] !== 'employee') {
     exit;
 }
 
-
 try {
     $sql = "SELECT r.*, rt.room_type, u.username FROM reservations AS r INNER JOIN rooms AS rt ON r.room_id = rt.room_id INNER JOIN users AS u ON r.user_id = u.user_id";
     $stmt = $PDO->prepare($sql);
@@ -29,105 +33,76 @@ try {
     echo $e->getMessage();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['submit']) && $_POST['submit'] === 'update') {
-        $reservation_id = $_POST['reservation_id'];
-        $room_type = $_POST['room_type'];
-        $check_in_date = $_POST['check_in_date'];
-        $check_out_date = $_POST['check_out_date'];
+// Send email function
+function sendEmail($toEmail, $toName, $subject, $body)
+{
+    $mail = new PHPMailer(true);
 
-        try {
-            $PDO->beginTransaction();
+    try {
+        //Server settings
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.office365.com'; // Replace with your SMTP server
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'hamoodhabibitesting@outlook.com'; // Replace with your email address
+        $mail->Password   = 'hamoodhabibi69'; // Replace with your email password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
 
-            // Retrieve the current room ID
-            $currentRoomId = '';
-            $currentRoomSql = "SELECT room_id FROM reservations WHERE reservation_id = :reservation_id";
-            $currentRoomStmt = $PDO->prepare($currentRoomSql);
-            $currentRoomStmt->bindParam(':reservation_id', $reservation_id);
-            $currentRoomStmt->execute();
-            $currentRoomData = $currentRoomStmt->fetch(PDO::FETCH_ASSOC);
-            if ($currentRoomData) {
-                $currentRoomId = $currentRoomData['room_id'];
-            }
-            $currentRoomStmt->closeCursor();
+        //Recipients
+        $mail->setFrom('hamoodhabibitesting@outlook.com', 'Factuur Hotel ter Duin'); // Replace with your email address and name
+        $mail->addAddress($toEmail, $toName);
 
-            // Retrieve the new room ID based on the selected room type
-            $newRoomId = '';
-            $newRoomSql = "SELECT room_id FROM rooms WHERE room_type = :room_type";
-            $newRoomStmt = $PDO->prepare($newRoomSql);
-            $newRoomStmt->bindParam(':room_type', $room_type);
-            $newRoomStmt->execute();
-            $newRoomData = $newRoomStmt->fetch(PDO::FETCH_ASSOC);
-            if ($newRoomData) {
-                $newRoomId = $newRoomData['room_id'];
-            }
-            $newRoomStmt->closeCursor();
+        //Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
 
-            // Update the reservation with the new room ID and other details
-            $updateSql = "UPDATE reservations SET room_id = :new_room_id, check_in_date = :check_in_date, check_out_date = :check_out_date WHERE reservation_id = :reservation_id";
-            $updateStmt = $PDO->prepare($updateSql);
-            $updateStmt->bindParam(':new_room_id', $newRoomId);
-            $updateStmt->bindParam(':check_in_date', $check_in_date);
-            $updateStmt->bindParam(':check_out_date', $check_out_date);
-            $updateStmt->bindParam(':reservation_id', $reservation_id);
-            $updateStmt->execute();
-            $updateStmt->closeCursor();
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        echo "Email could not be sent. Error: {$mail->ErrorInfo}";
+        return false;
+    }
+}
 
-            // Update the available count in the rooms table for the previous and new room
-            $updateAvailableSql = "UPDATE rooms SET available = available + 1 WHERE room_id = :current_room_id";
-            $updateAvailableStmt = $PDO->prepare($updateAvailableSql);
-            $updateAvailableStmt->bindParam(':current_room_id', $currentRoomId);
-            $updateAvailableStmt->execute();
-            $updateAvailableStmt->closeCursor();
-
-            $updateAvailableSql = "UPDATE rooms SET available = available - 1 WHERE room_id = :new_room_id";
-            $updateAvailableStmt = $PDO->prepare($updateAvailableSql);
-            $updateAvailableStmt->bindParam(':new_room_id', $newRoomId);
-            $updateAvailableStmt->execute();
-            $updateAvailableStmt->closeCursor();
-
-            $PDO->commit();
-        } catch (PDOException $e) {
-            $PDO->rollBack();
-            echo $e->getMessage();
+// Handle email sending
+if (isset($_POST['sendEmail'])) {
+    $reservationId = $_POST['reservation_id'];
+    
+    try {
+        // Retrieve the reservation details
+        $reservationSql = "SELECT r.check_in_date, r.check_out_date, u.username, u.address, u.email, u.phone, rt.room_type
+                           FROM reservations AS r
+                           INNER JOIN users AS u ON r.user_id = u.user_id
+                           INNER JOIN rooms AS rt ON r.room_id = rt.room_id
+                           WHERE r.reservation_id = :reservation_id";
+        $reservationStmt = $PDO->prepare($reservationSql);
+        $reservationStmt->bindParam(':reservation_id', $reservationId);
+        $reservationStmt->execute();
+        $reservation = $reservationStmt->fetch(PDO::FETCH_ASSOC);
+        
+        // Compose email body
+        $emailBody = "<html><head><style>" . file_get_contents("../../css/factuur.css") . "</style></head><body><div class='main'>";
+        $emailBody .= "<h1>Factuur</h1>";
+        $emailBody .= "<ul>";
+        $emailBody .= "<li><strong>Username:</strong> " . $reservation['username'] . "</li>";
+        $emailBody .= "<li><strong>Address:</strong> " . $reservation['address'] . "</li>";
+        $emailBody .= "<li><strong>Email:</strong> " . $reservation['email'] . "</li>";
+        $emailBody .= "<li><strong>Phone:</strong> " . $reservation['phone'] . "</li>";
+        $emailBody .= "<li><strong>Room Type:</strong> " . $reservation['room_type'] . "</li>";
+        $emailBody .= "<li><strong>Check-in Date:</strong> " . $reservation['check_in_date'] . "</li>";
+        $emailBody .= "<li><strong>Check-out Date:</strong> " . $reservation['check_out_date'] . "</li>";
+        $emailBody .= "</ul>";
+        $emailBody .= "</div></body></html>";
+        
+        // Send email
+        if (sendEmail($reservation['email'], $reservation['username'], 'Invoice', $emailBody)) {
+            echo "Email sent successfully.";
+        } else {
+            echo "Failed to send email.";
         }
-    } elseif (isset($_POST['submit']) && $_POST['submit'] === 'delete') {
-        $reservation_id = $_POST['reservation_id'];
-
-        try {
-            $PDO->beginTransaction();
-
-            // Retrieve the current room ID
-            $currentRoomId = '';
-            $currentRoomSql = "SELECT room_id FROM reservations WHERE reservation_id = :reservation_id";
-            $currentRoomStmt = $PDO->prepare($currentRoomSql);
-            $currentRoomStmt->bindParam(':reservation_id', $reservation_id);
-            $currentRoomStmt->execute();
-            $currentRoomData = $currentRoomStmt->fetch(PDO::FETCH_ASSOC);
-            if ($currentRoomData) {
-                $currentRoomId = $currentRoomData['room_id'];
-            }
-            $currentRoomStmt->closeCursor();
-
-            // Delete the reservation
-            $deleteSql = "DELETE FROM reservations WHERE reservation_id = :reservation_id";
-            $deleteStmt = $PDO->prepare($deleteSql);
-            $deleteStmt->bindParam(':reservation_id', $reservation_id);
-            $deleteStmt->execute();
-            $deleteStmt->closeCursor();
-
-            // Update the available count in the rooms table
-            $updateAvailableSql = "UPDATE rooms SET available = available + 1 WHERE room_id = :room_id";
-            $updateAvailableStmt = $PDO->prepare($updateAvailableSql);
-            $updateAvailableStmt->bindParam(':room_id', $currentRoomId);
-            $updateAvailableStmt->execute();
-            $updateAvailableStmt->closeCursor();
-
-            $PDO->commit();
-        } catch (PDOException $e) {
-            $PDO->rollBack();
-            echo $e->getMessage();
-        }
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
 }
 
@@ -194,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <td>
                                         <button type="submit" name="submit" value="update">Update</button>
                                         <button type="submit" name="submit" value="delete">Delete</button>
+                                        <button type="submit" name="sendEmail" value="true" class="mail-button">Send Email</button>
                                     </td>
                                 </form>
                             </tr>
@@ -210,6 +186,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </script>
         <?php unset($_SESSION['success_message']); ?>
     <?php } ?>
+    <script>
+        var mailButtons = document.getElementsByClassName("mail-button");
+        var printButton = document.getElementsByClassName("print-button")[0];
+        
+        for (var i = 0; i < mailButtons.length; i++) {
+            mailButtons[i].addEventListener("click", function() {
+                printButton.style.display = "none";
+            });
+        }
+    </script>
 </body>
 
 </html>

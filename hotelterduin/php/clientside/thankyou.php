@@ -1,6 +1,11 @@
 <?php
 session_start();
 require_once '../../db/config.php';
+require_once '../../../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
 
 $db = new Db();
 $PDO = $db->getPDO();
@@ -20,7 +25,68 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+
+// Send email function
+function sendEmail($toEmail, $toName, $subject, $body)
+{
+    $mail = new PHPMailer(true);
+
+    try {
+        //Server settings
+        $mail->isSMTP();
+        $mail->Host       = 'smtp.office365.com'; // Replace with your SMTP server
+        $mail->SMTPAuth   = true;
+        $mail->Username   = 'hamoodhabibitesting@outlook.com'; // Replace with your email address
+        $mail->Password   = 'hamoodhabibi69'; // Replace with your email password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port       = 587;
+
+        //Recipients
+        $mail->setFrom('hamoodhabibitesting@outlook.com', 'Factuur Hotel ter Duin'); // Replace with your email address and name
+        $mail->addAddress($toEmail, $toName);
+
+        //Content
+        $mail->isHTML(true);
+        $mail->Subject = $subject;
+        $mail->Body    = $body;
+
+        $mail->send();
+        return true;
+    } catch (Exception $e) {
+        echo "Email could not be sent. Error: {$mail->ErrorInfo}";
+        return false;
+    }
+}
+
+// Handle email sending
+if (isset($_POST['sendEmail'])) {
+    $toEmail = $_POST['toEmail'];
+    $toName  = $_POST['toName'];
+    $subject = "Invoice";
+    $body    = "<html><head><style>" . file_get_contents("../../css/factuur.css") . "</style></head><body><div class='main'>";
+    foreach ($invoices as $invoice) {
+        $body .= "<h1>Factuur</h1>";
+        $body .= "<ul>";
+        $body .= "<li><strong>Username:</strong> " . $invoice['username'] . "</li>";
+        $body .= "<li><strong>Address:</strong> " . $invoice['address'] . "</li>";
+        $body .= "<li><strong>Email:</strong> " . $invoice['email'] . "</li>";
+        $body .= "<li><strong>Phone:</strong> " . $invoice['phone'] . "</li>";
+        $body .= "<li><strong>Room Type:</strong> " . $invoice['room_type'] . "</li>";
+        $body .= "<li><strong>Check-in Date:</strong> " . $invoice['check_in_date'] . "</li>";
+        $body .= "<li><strong>Check-out Date:</strong> " . $invoice['check_out_date'] . "</li>";
+        $body .= "</ul>";
+        $body .= "<hr>";
+    }
+    $body .= "</div></body></html>";
+
+    if (sendEmail($toEmail, $toName, $subject, $body)) {
+        echo "Email sent successfully.";
+    } else {
+        echo "Failed to send email.";
+    }
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,70 +94,13 @@ try {
     <title>Factuur</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
+    <link rel="stylesheet" href="../../css/factuur.css">
     <style>
         @media print {
             .print-button,
-            header {
+            .email-button {
                 display: none;
             }
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .main {
-            background-color: #fff;
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 600px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            font-size: 24px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #333;
-            text-align: center;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        li {
-            margin-bottom: 10px;
-            color: #555;
-        }
-
-        hr {
-            border: none;
-            border-top: 1px solid #ddd;
-            margin-top: 20px;
-            margin-bottom: 20px;
-        }
-
-        .print-button {
-            padding: 10px 20px;
-            background-color: darkcyan;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            display: block;
-            margin: 20px auto;
-            border-radius: 5px;
-        }
-
-        .print-button:hover {
-            background-color: #00b3b3;
         }
     </style>
 </head>
@@ -119,6 +128,16 @@ try {
         <?php } ?>
 
         <button class="print-button" onclick="window.print()">Print Factuur</button>
+
+        <?php if (!isset($_POST['sendEmail'])) { ?>
+            <div class="email-form">
+                <form method="post" action="">
+                    <input type="hidden" name="toEmail" value="<?php echo $invoices[0]['email']; ?>">
+                    <input type="hidden" name="toName" value="<?php echo $invoices[0]['username']; ?>">
+                    <input type="submit" name="sendEmail" class="print-button" value="Email Invoice">
+                </form>
+            </div>
+        <?php } ?>
     </main>
 </body>
 
