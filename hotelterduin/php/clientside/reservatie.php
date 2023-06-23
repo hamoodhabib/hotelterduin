@@ -216,7 +216,7 @@ if (isset($_POST['submit'])) {
                                             ?>
                                         </select>
                                         <br>
-                                        <label for="check_in_date">Select New Check-in Date:</label>
+                                        <label for="check_in_date">Select New Check-in Date:</label >
                                         <input type="date" name="check_in_date">
                                         <br>
                                         <label for="check_out_date">Select New Check-out Date:</label>

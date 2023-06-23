@@ -8,87 +8,8 @@ session_start();
     <title>Homepage</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
-    <script src="../../js/homepage.js" defer></script>
-    <style>
-        .homepage-container {
-            text-align: center;
-            margin-top: 50px;
-        }
+    <link rel="stylesheet" href="../../css/hp.css">
 
-        .homepage-container h2 {
-            color: black;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-
-        .room-boxes {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 30px;
-        }
-
-        .room-box {
-            width: 200px;
-            height: 300px;
-            background-color: lightseagreen;
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 0 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .room-box:hover {
-            background-color: darkcyan;
-        }
-
-        .room-box img {
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 15px;
-        }
-
-        .room-box p {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .room-box a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .history-box {
-            width: 500px;
-            margin: 50px auto;
-            border: 2px solid darkcyan;
-            padding: 20px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .job-box {
-            width: 500px;
-            margin: 50px auto;
-            border: 2px solid darkcyan;
-            padding: 20px;
-            text-align: center;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .job-box:hover {
-            background-color: lightcyan;
-        }
-    </style>
 </head>
 
 <body>
@@ -103,19 +24,19 @@ session_start();
         <div class="room-boxes">
             <div class="room-box">
                 <a href="products.php">
-                    <img src="../../images/logo.png" alt="Regular Room">
+                    <img src="../../images/bed.png" alt="Regular Room">
                     <p>Regular Room</p>
                 </a>
             </div>
             <div class="room-box">
                 <a href="products.php">
-                    <img src="../../images/logo.png" alt="Deluxe Room">
+                    <img src="../../images/regular.jpg" alt="Deluxe Room">
                     <p>Deluxe Room</p>
                 </a>
             </div>
             <div class="room-box">
                 <a href="products.php">
-                    <img src="../../images/logo.png" alt="Very Deluxe Room">
+                    <img src="../../images/luxe.jpg" alt="Very Deluxe Room">
                     <p>Very Deluxe Room</p>
                 </a>
             </div>

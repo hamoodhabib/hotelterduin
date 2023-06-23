@@ -7,6 +7,19 @@ require_once '../../db/config.php';
 $db = new Db();
 $PDO = $db->getPDO();
 
+// Check if the user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: ../../php/clientside/login.php");
+    exit;
+}
+
+// Check if the user has the necessary role to add rooms
+if ($_SESSION['role'] !== 'employee') {
+    echo "You do not have permission to access this page.";
+    exit;
+}
+
+
 try {
     $sql = "SELECT r.*, rt.room_type, u.username FROM reservations AS r INNER JOIN rooms AS rt ON r.room_id = rt.room_id INNER JOIN users AS u ON r.user_id = u.user_id";
     $stmt = $PDO->prepare($sql);
@@ -127,23 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Admin Reservations</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
-    <style>
-        .table-container {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .table-container table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-container th,
-        .table-container td {
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/admin.css">
 </head>
 
 <body>

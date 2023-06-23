@@ -1,7 +1,5 @@
 <?php
-
 session_start();
-
 
 if (isset($_SESSION['user_id'])) {
     // Redirect to home page or dashboard if the user is already logged in
@@ -25,8 +23,6 @@ if (isset($_POST['submit'])) {
 
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
-
     if ($user) {
         if ($user['password']) {
             // Set session variables for the logged-in user
@@ -34,13 +30,15 @@ if (isset($_POST['submit'])) {
             $_SESSION['role'] = $user['role'];
             $_SESSION['username'] = $username;
 
-    
             // Redirect to appropriate page based on user type
             if ($user['role'] === 'customer') {
                 header('Location: ../../php/clientside/homepage.php');
             } elseif ($user['role'] === 'employee') {
                 header('Location: ../../php/clientside/homepage.php');
+            } else {
+                header('Location: ../../login.php'); // Redirect to the login page for non-customer and non-employee roles
             }
+            exit;
         } else {
             $error = 'Incorrect username or password';
         }
@@ -48,7 +46,6 @@ if (isset($_POST['submit'])) {
         $error = 'Incorrect username or password';
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -88,7 +85,6 @@ if (isset($_POST['submit'])) {
             </center>
         </div>
     </main>
-
 </body>
 
 </html>

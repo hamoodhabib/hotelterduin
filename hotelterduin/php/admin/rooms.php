@@ -5,7 +5,7 @@ require_once '../../db/config.php';
 
 // Check if the user is logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php");
+    header("Location: ../../php/clientside/login.php");
     exit;
 }
 
@@ -37,6 +37,42 @@ if (isset($_POST['add'])) {
     exit;
 }
 
+// Handle room removal
+if (isset($_POST['remove'])) {
+    $roomID = $_POST['room_id'];
+
+    // Delete the room from the rooms table
+    $deleteSql = "DELETE FROM rooms WHERE room_id = :roomID";
+    $deleteStmt = $PDO->prepare($deleteSql);
+    $deleteStmt->bindParam(':roomID', $roomID);
+    $deleteStmt->execute();
+
+    // Redirect to a success page or display a success message
+    header("Location: rooms.php?success=Room removed successfully");
+    exit;
+}
+
+// Handle room update
+if (isset($_POST['update'])) {
+    $roomID = $_POST['room_id'];
+    $roomType = $_POST['room_type'];
+    $description = $_POST['description'];
+    $available = $_POST['available'];
+
+    // Update the room in the rooms table
+    $updateSql = "UPDATE rooms SET room_type = :roomType, description = :description, available = :available WHERE room_id = :roomID";
+    $updateStmt = $PDO->prepare($updateSql);
+    $updateStmt->bindParam(':roomType', $roomType);
+    $updateStmt->bindParam(':description', $description);
+    $updateStmt->bindParam(':available', $available);
+    $updateStmt->bindParam(':roomID', $roomID);
+    $updateStmt->execute();
+
+    // Redirect to a success page or display a success message
+    header("Location: rooms.php?success=Room updated successfully");
+    exit;
+}
+
 // Fetch all rooms from the database
 $sql = "SELECT * FROM rooms";
 $stmt = $PDO->prepare($sql);
@@ -51,27 +87,7 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <title>Rooms</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
-    <style>
-        .table-container {
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .table-container table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-container th,
-        .table-container td {
-            border: 1px solid #ccc;
-            padding: 8px;
-        }
-
-        h1 {
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/admin.css">
 </head>
 
 <body>
@@ -82,26 +98,16 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <main>
         <div class="table-container">
             <h1>Add Room</h1>
-            <table>
-                <thead>
+            <form action="" method="post">
+                <table>
                     <tr>
-                        <th>Room Type</th>
-                        <th>Description</th>
-                        <th>Availability</th>
-                        <th>Action</th>
+                        <td><input type="text" name="room_type" placeholder="Type of room.." required></td>
+                        <td><input type="text" name="description"></td>
+                        <td><input type="number" name="available" required></td>
+                        <td><input type="submit" name="add" value="Add Room"></td>
                     </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <form action="" method="post">
-                            <td><input type="text" name="room_type" placeholder="Type of room.." required></td>
-                            <td><input type="text" name="description"></td>
-                            <td><input type="number" name="available" required></td>
-                            <td><input type="submit" name="add" value="Add Room"></td>
-                        </form>
-                    </tr>
-                </tbody>
-            </table>
+                </table>
+            </form>
         </div>
 
         <div class="table-container">
