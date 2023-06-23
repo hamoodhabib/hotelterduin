@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 21 jun 2023 om 16:43
+-- Gegenereerd op: 23 jun 2023 om 22:15
 -- Serverversie: 10.4.28-MariaDB
 -- PHP-versie: 8.2.4
 
@@ -49,8 +49,7 @@ INSERT INTO `contacts` (`contact_id`, `user_id`, `name`, `email`, `phone`, `mess
 (6, 3, 'derbas', 'ahmedspam1@hotmail.com', '0623099584', '11111'),
 (7, NULL, 'derbas', 'no@mo.nl', '076255424', 'fajj'),
 (8, 4, 'hahah', 'ha@ha.ha', '08978654', 'gooi'),
-(10, 7, 'derbas', 'sfgsagsagf@live.nl', '08978654', 'hoeqveel kost de kamer'),
-(11, 10, 'hoi', 'hoi@hoi.nl', '08w46w43264363643653', 'hoi');
+(10, 7, 'derbas', 'sfgsagsagf@live.nl', '08978654', 'hoeqveel kost de kamer');
 
 -- --------------------------------------------------------
 
@@ -71,8 +70,8 @@ CREATE TABLE `reservations` (
 --
 
 INSERT INTO `reservations` (`reservation_id`, `user_id`, `room_id`, `check_in_date`, `check_out_date`) VALUES
-(20, 4, 2, '2023-06-28', '2023-07-06'),
-(21, 3, 2, '2023-06-19', '2023-06-21');
+(21, 3, 2, '2023-06-19', '2023-06-21'),
+(35, 4, 12, '2023-06-25', '2023-06-29');
 
 -- --------------------------------------------------------
 
@@ -92,8 +91,9 @@ CREATE TABLE `rooms` (
 --
 
 INSERT INTO `rooms` (`room_id`, `room_type`, `description`, `available`) VALUES
-(2, 'Regular', 'Very regular', 8),
-(12, 'Deluxe', 'Very deluxe', 6);
+(2, 'Regular', 'Very regular', 9),
+(12, 'Deluxe', 'Very deluxe', 7),
+(16, 'Very Deluxe', 'Very nice deluxe', 4);
 
 -- --------------------------------------------------------
 
@@ -118,8 +118,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `address`, `email`, `phone`) VALUES
 (3, 'morhaf', '$2y$10$.6QjEy1fMLEyMZx.cajYAu1yrl619WRSZ78UTZFobA3', 'customer', 'Amsterdam 123', 'morhaf@gmail.com', '0612345678'),
 (4, 'hamood', '$2y$10$cE8NXsDqQ2hh0hCrzh1B4OzCfKDL9J.ywZsJzxhjnTz', 'employee', 'Jan Hoeckstraat', 'a_ridha@hotmail.nl', '0623099584'),
-(7, 'Hoedie', '$2y$10$EzGi8FoJ4F2LhHSlrJY/6uUuH/Wb2gQ7Vw5uM/H/mpx', 'employee', 'esadfsf', 'sdfsfsf@live.nl', '08978654'),
-(10, 'hoi', '$2y$10$x45KP3t.1rHxDIfI9h.azOBQ3Ct4CsKR2O5uEtpucSb', 'employee', 'sesamstraat 123', 'hoi@hoi.nl', '0612345678');
+(7, 'Hoedie', '$2y$10$EzGi8FoJ4F2LhHSlrJY/6uUuH/Wb2gQ7Vw5uM/H/mpx', 'employee', 'esadfsf', 'sdfsfsf@live.nl', '08978654');
 
 --
 -- Indexen voor geëxporteerde tabellen
@@ -166,19 +165,19 @@ ALTER TABLE `contacts`
 -- AUTO_INCREMENT voor een tabel `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `reservation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT voor een tabel `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT voor een tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Beperkingen voor geëxporteerde tabellen
