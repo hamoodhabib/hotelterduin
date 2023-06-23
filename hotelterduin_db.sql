@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Gegenereerd op: 23 jun 2023 om 22:15
+-- Gegenereerd op: 24 jun 2023 om 00:00
 -- Serverversie: 10.4.28-MariaDB
 -- PHP-versie: 8.2.4
 
@@ -116,9 +116,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `role`, `address`, `email`, `phone`) VALUES
-(3, 'morhaf', '$2y$10$.6QjEy1fMLEyMZx.cajYAu1yrl619WRSZ78UTZFobA3', 'customer', 'Amsterdam 123', 'morhaf@gmail.com', '0612345678'),
-(4, 'hamood', '$2y$10$cE8NXsDqQ2hh0hCrzh1B4OzCfKDL9J.ywZsJzxhjnTz', 'employee', 'Jan Hoeckstraat', 'a_ridha@hotmail.nl', '0623099584'),
-(7, 'Hoedie', '$2y$10$EzGi8FoJ4F2LhHSlrJY/6uUuH/Wb2gQ7Vw5uM/H/mpx', 'employee', 'esadfsf', 'sdfsfsf@live.nl', '08978654');
+(3, 'morhaf', '$2y$10$KT3K7GUaZUyXt1eo3DlxW.ZwJ6UP6ca1YKlK0Qw4UeT', 'customer', 'Brocolli 123', 'blabla@gmail.com', '0612345678'),
+(4, 'hamood', '$2y$10$cE8NXsDqQ2hh0hCrzh1B4OzCfKDL9J.ywZsJzxhjnTz', 'employee', 'Spinazi 456', 'test@gmail.com', '0612345678'),
+(7, 'Hoedie', '$2y$10$EzGi8FoJ4F2LhHSlrJY/6uUuH/Wb2gQ7Vw5uM/H/mpx', 'employee', 'esadfsf', 'sdfsfsf@live.nl', '0612345678');
 
 --
 -- Indexen voor geëxporteerde tabellen
