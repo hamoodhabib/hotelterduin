@@ -1,3 +1,7 @@
+<?php
+$currentFile = basename($_SERVER['PHP_SELF']);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,18 +13,16 @@
 <body>
     <header>
         <nav class="navbar">
-        <h1><a class="logo" href="../clientside/homepage.php">
-                <img src="../../images/logo.png" alt="logo">
-            </a>Hotel ter Duin</h1>
-            <!-- <a class="logo" href="../clientside/homepage.php"><img src="../../images/logo.png" alt="logo"></a> -->
-            
-            
+            <h1>
+                <a class="logo" href="../clientside/homepage.php">
+                    <img src="../../images/logo.png" alt="logo">
+                </a>Hotel ter Duin
+            </h1>
             <ul class="menu">
-                <li><a class="menu_item <?php echo ($currentURL === '../clientside/homepage.php') ? 'current' : ''; ?>" href="../clientside/homepage.php">Homepage</a></li>
-                <li><a class="menu_item <?php echo ($currentURL === '../clientside/products.php') ? 'current' : ''; ?>" href="../clientside/products.php">Rooms</a></li>
-                <li><a class="menu_item <?php echo ($currentURL === '../clientside/contact.php') ? 'current' : ''; ?>" href="../clientside/contact.php">Contact</a></li>
-                <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] !== '') :
-                    ?>
+                <li><a class="menu_item <?php echo ($currentFile === 'homepage.php') ? 'current' : ''; ?>" href="../clientside/homepage.php">Homepage</a></li>
+                <li><a class="menu_item <?php echo ($currentFile === 'products.php') ? 'current' : ''; ?>" href="../clientside/products.php">Rooms</a></li>
+                <li><a class="menu_item <?php echo ($currentFile === 'contact.php') ? 'current' : ''; ?>" href="../clientside/contact.php">Contact</a></li>
+                <?php if (isset($_SESSION['user_id']) && $_SESSION['user_id'] !== '') : ?>
                     <li class="dropdown">
                         <a class="menu_item <?php echo ($currentURL === '#') ? 'current' : ''; ?>" href="#"><?php echo $_SESSION['username']?> &#9662;</a>
                         <ul class="dropdown-menu">
@@ -35,11 +37,11 @@
                                 <br><br>
                                 <li><a href="../clientside/reservatie.php?id=<?php echo $_SESSION['user_id'];?>">My Reservations</a></li>
                             <?php endif; ?>
-                            <li>
+                        
                                 <form action="../../db/actions/logout.php" method="post">
                                     <input type="submit" name="submit" value="Logout">
                                 </form>
-                            </li>
+
                         </ul>
                     </li>
                 <?php else : ?>

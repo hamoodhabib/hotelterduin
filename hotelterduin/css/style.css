@@ -30,11 +30,15 @@ body {
     border-radius: 3px;
     font-size: 14px;
     margin-bottom: 10px;
+    box-sizing: border-box;
+        /* Add box-sizing property to include padding and border in the width calculation */
 }
 
 .formulier textarea {
-    height: 150px;
+    height: 100px;
+        /* Adjust the height as desired */
 }
+
 
 .formulier input[type="submit"] {
     background-color: darkcyan;
