@@ -61,7 +61,7 @@ if (isset($_POST['submit'])) {
     <title>Edit Profile</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
-    <link rel="stylesheet" href="../../css/gegevens.css">
+    <!-- <link rel="stylesheet" href="../../css/gegevens.css"> -->
 </head>
 
 <body>
@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
         <?php include '../../templates/navbar.php'; ?>
     </header>
     <br><br>
-    <div class="container">
+    <div class="formulier">
         <div class="profile-form">
             <h1>Edit Profile</h1>
             <form action="" method="post">

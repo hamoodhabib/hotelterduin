@@ -52,14 +52,31 @@ if (isset($_POST['submit'])) {
                 updateRoomAvailability($newRoomType, $reservation['available']);
             }
 
-            // Update the reservation details
-            $updateSql = "UPDATE reservations SET room_id = :room_id, check_in_date = :check_in_date, check_out_date = :check_out_date WHERE reservation_id = :reservation_id";
-            $updateStmt = $PDO->prepare($updateSql);
-            $updateStmt->bindParam(':room_id', $newRoomId);
-            $updateStmt->bindParam(':check_in_date', $newCheckInDate);
-            $updateStmt->bindParam(':check_out_date', $newCheckOutDate);
-            $updateStmt->bindParam(':reservation_id', $reservation_id);
-            $updateStmt->execute();
+            // Validate the reservation dates
+            $currentDate = date('Y-m-d');
+            $next30Days = date('Y-m-d', strtotime('+30 days'));
+
+            if ($newCheckInDate >= $currentDate && $newCheckInDate <= $check_out_date) {
+                if ($newCheckOutDate > $newCheckInDate && $newCheckOutDate <= $next30Days) {
+                    // Update the reservation details
+                    $updateSql = "UPDATE reservations SET room_id = :room_id, check_in_date = :check_in_date, check_out_date = :check_out_date WHERE reservation_id = :reservation_id";
+                    $updateStmt = $PDO->prepare($updateSql);
+                    $updateStmt->bindParam(':room_id', $newRoomId);
+                    $updateStmt->bindParam(':check_in_date', $newCheckInDate);
+                    $updateStmt->bindParam(':check_out_date', $newCheckOutDate);
+                    $updateStmt->bindParam(':reservation_id', $reservation_id);
+                    $updateStmt->execute();
+
+                    // Redirect or display a success message
+                    $_SESSION['success_message'] = "Reservation updated successfully.";
+                    header("Location: gegevens.php");
+                    exit;
+                } else {
+                    echo "Invalid check-out date. Please select a date within the allowed range.";
+                }
+            } else {
+                echo "Invalid check-in date. Please select a date within the allowed range.";
+            }
         } elseif ($_POST['submit'] === 'Delete Reservation') {
             // Update the available count of the room
             updateRoomAvailability($room_type, $reservation['available'] + 1);
@@ -69,16 +86,15 @@ if (isset($_POST['submit'])) {
             $deleteStmt = $PDO->prepare($deleteSql);
             $deleteStmt->bindParam(':reservation_id', $reservation_id);
             $deleteStmt->execute();
-        }
 
-        // Redirect or display a success message
-        header("Location: gegevens.php?success=Reservation updated/deleted successfully");
-        exit;
+            // Redirect or display a success message
+            $_SESSION['success_message'] = "Reservation deleted successfully.";
+            header("Location: reservatie.php");
+            exit;
+        }
     }
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html>
@@ -87,90 +103,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
     <link rel="stylesheet" href="../../css/reservatie.css">
-    <style>
-        main {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-        }
-        
-        .reservations {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        
-        .formulier {
-            margin: 10px;
-            padding: 20px;
-            background-color: #f5f5f5;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .formulier h1 {
-            margin: 0;
-            margin-bottom: 20px;
-            color: darkcyan;
-        }
-        
-        .formulier-text {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .formulier-text h2 {
-            margin: 0;
-            font-size: 24px;
-        }
-        
-        .formulier-text p {
-            margin: 0;
-            font-size: 16px;
-        }
-        
-        .reservation-actions {
-            margin-top: 20px;
-        }
-        
-        .reservation-form {
-            margin-top: 20px;
-            background-color: #f5f5f5;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        .reservation-form label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-        
-        .reservation-form select,
-        .reservation-form input[type="date"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        .reservation-form input[type="submit"] {
-            padding: 10px 20px;
-            background-color: darkcyan;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        
-        .reservation-form input[type="submit"]:hover {
-            background-color: #00b3b3;
-        }
-    </style>
+    <script src="../../js/products.js"></script>
 </head>
 <body>
     <header>
@@ -179,6 +112,7 @@ if (isset($_POST['submit'])) {
     <br>
     
     <main>
+        <center>
         <h1>My reservation(s)</h1>
         <div class="reservations">
             <?php 
@@ -201,7 +135,7 @@ if (isset($_POST['submit'])) {
                                     <p>Check-out Date: <?php echo $reservation['check_out_date']; ?></p>
                                     <div class="reservation-actions">
                                         <label for="room_id">Select New Room:</label>
-                                        <select name="room_id">
+                                        <select name="room_id" required>
                                             <option value="" disabled selected>Select a room</option>
                                             <?php
                                             // Fetch available rooms from the database
@@ -216,11 +150,11 @@ if (isset($_POST['submit'])) {
                                             ?>
                                         </select>
                                         <br>
-                                        <label for="check_in_date">Select New Check-in Date:</label >
-                                        <input type="date" name="check_in_date">
+                                        <label for="check_in_date">Select New Check-in Date:</label>
+                                        <input type="date" name="check_in_date" id="check_in_date" min="<?php echo $currentDate; ?>" max="<?php echo $check_out_date; ?>" required>
                                         <br>
                                         <label for="check_out_date">Select New Check-out Date:</label>
-                                        <input type="date" name="check_out_date">
+                                        <input type="date" name="check_out_date" id="check_out_date" min="<?php echo $check_in_date; ?>" max="<?php echo $next30Days; ?>" required>
                                         <br><br>
                                         <input type="submit" name="submit" value="Update Reservation">
                                         <br><br>
@@ -240,6 +174,33 @@ if (isset($_POST['submit'])) {
             ?>
         </div>
         <br>
+        </center>
     </main>
+    <script>
+        // Client-side validation to prevent selecting invalid check-out dates
+        document.addEventListener("DOMContentLoaded", function () {
+            var checkInDateInput = document.getElementById('check_in_date');
+            var checkOutDateInput = document.getElementById('check_out_date');
+
+            checkInDateInput.addEventListener("input", function () {
+                var checkInDate = new Date(this.value);
+                var checkOutDate = new Date(checkOutDateInput.value);
+
+                if (checkOutDate <= checkInDate) {
+                    checkOutDateInput.value = "";
+                }
+
+                checkOutDateInput.min = formatDate(checkInDate, 1);
+            });
+
+            function formatDate(date, offsetDays) {
+                date.setDate(date.getDate() + offsetDays);
+                var year = date.getFullYear();
+                var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                var day = ("0" + date.getDate()).slice(-2);
+                return year + "-" + month + "-" + day;
+            }
+        });
+    </script>
 </body>
 </html>

@@ -23,6 +23,7 @@ body {
 .formulier input[type="text"],
 .formulier input[type="email"],
 .formulier input[type="tel"],
+
 .formulier textarea {
     width: 100%;
     padding: 10px;
