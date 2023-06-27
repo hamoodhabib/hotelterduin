@@ -47,6 +47,7 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <table>
                 <center>
                     <h1>All Users</h1>
+                    <p>You can update anything here and delete users. <br> Don't randomly press buttons.</p>
                 </center>
                 <thead>
                     <tr>

@@ -97,7 +97,10 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <main>
         <div class="table-container">
+        <center>
             <h1>Add Room</h1>
+                <p>You can update anything here and delete rooms. <br> Don't randomly press buttons.</p>
+        </center>
             <form action="" method="post">
                 <table>
                     <tr>
@@ -111,7 +114,9 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="table-container">
+            <center>
             <h1>Edit Room</h1>
+            </center>
             <table>
                 <thead>
                     <tr>

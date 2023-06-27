@@ -70,6 +70,7 @@ if (isset($_POST['submit'])) {
         <div class="formulier">
             <center>
                 <h1>Log in</h1>
+                <p>You need to register and log in to use the site, <br> this makes it easier. <br> Thank you.</p>
                 <br>
                 <form action="" method="post">
                     <div class="formulier-text">

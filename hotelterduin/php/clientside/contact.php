@@ -40,7 +40,7 @@ if ($user_id) {
                     <form method="post" action="../../db/actions/contactdb.php">
                         <h1>Contact Us!</h1>
                         <label for="name">Name</label>
-                        <input type="text" id="name" name="name" placeholder="Your naam.." required><br><br>
+                        <input type="text" id="name" name="name" placeholder="Your name.." required><br><br>
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" placeholder="Your email.." required><br><br>
                         <label for="phone">Phone</label>

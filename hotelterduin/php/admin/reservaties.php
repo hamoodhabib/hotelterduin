@@ -33,6 +33,16 @@ try {
     echo $e->getMessage();
 }
 
+// Function to update the available count of a room type
+function updateRoomAvailability($room_id, $available)
+{
+    $updateSql = "UPDATE rooms SET available = :available WHERE room_id = :room_id";
+    $updateStmt = $GLOBALS['PDO']->prepare($updateSql);
+    $updateStmt->bindParam(':available', $available);
+    $updateStmt->bindParam(':room_id', $room_id);
+    $updateStmt->execute();
+}
+
 // Send email function
 function sendEmail($toEmail, $toName, $subject, $body)
 {
@@ -65,47 +75,60 @@ function sendEmail($toEmail, $toName, $subject, $body)
     }
 }
 
-// Handle email sending
-if (isset($_POST['sendEmail'])) {
-    $reservationId = $_POST['reservation_id'];
-    
-    try {
-        // Retrieve the reservation details
-        $reservationSql = "SELECT r.check_in_date, r.check_out_date, u.username, u.address, u.email, u.phone, rt.room_type
-                           FROM reservations AS r
-                           INNER JOIN users AS u ON r.user_id = u.user_id
-                           INNER JOIN rooms AS rt ON r.room_id = rt.room_id
-                           WHERE r.reservation_id = :reservation_id";
-        $reservationStmt = $PDO->prepare($reservationSql);
-        $reservationStmt->bindParam(':reservation_id', $reservationId);
-        $reservationStmt->execute();
-        $reservation = $reservationStmt->fetch(PDO::FETCH_ASSOC);
-        
-        // Compose email body
-        $emailBody = "<html><head><style>" . file_get_contents("../../css/factuur.css") . "</style></head><body><div class='main'>";
-        $emailBody .= "<h1>Factuur</h1>";
-        $emailBody .= "<ul>";
-        $emailBody .= "<li><strong>Username:</strong> " . $reservation['username'] . "</li>";
-        $emailBody .= "<li><strong>Address:</strong> " . $reservation['address'] . "</li>";
-        $emailBody .= "<li><strong>Email:</strong> " . $reservation['email'] . "</li>";
-        $emailBody .= "<li><strong>Phone:</strong> " . $reservation['phone'] . "</li>";
-        $emailBody .= "<li><strong>Room Type:</strong> " . $reservation['room_type'] . "</li>";
-        $emailBody .= "<li><strong>Check-in Date:</strong> " . $reservation['check_in_date'] . "</li>";
-        $emailBody .= "<li><strong>Check-out Date:</strong> " . $reservation['check_out_date'] . "</li>";
-        $emailBody .= "</ul>";
-        $emailBody .= "</div></body></html>";
-        
-        // Send email
-        if (sendEmail($reservation['email'], $reservation['username'], 'Invoice', $emailBody)) {
-            echo "Email sent successfully.";
-        } else {
-            echo "Failed to send email.";
+// Handle form submission
+if (isset($_POST['submit'])) {
+    $reservation_id = $_POST['reservation_id'];
+
+    // Get the current reservation details
+    $reservationSql = "SELECT * FROM reservations AS r
+                       INNER JOIN rooms AS rt ON r.room_id = rt.room_id
+                       WHERE r.reservation_id = :reservation_id";
+    $reservationStmt = $PDO->prepare($reservationSql);
+    $reservationStmt->bindParam(':reservation_id', $reservation_id);
+    $reservationStmt->execute();
+    $reservation = $reservationStmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($reservation) {
+        $room_id = $reservation['room_id'];
+        $room_type = $reservation['room_type'];
+
+        if ($_POST['submit'] === 'Update') {
+            $new_room_type = $_POST['room_type'];
+
+            // Update the available count of the rooms
+            if ($new_room_type !== $room_type) {
+                updateRoomAvailability($room_id, $reservation['available'] + 1);
+                updateRoomAvailability($_POST['new_room_id'], $reservation['available']);
+            }
+
+            // Update the reservation details
+            $updateSql = "UPDATE reservations SET room_id = :room_id WHERE reservation_id = :reservation_id";
+            $updateStmt = $PDO->prepare($updateSql);
+            $updateStmt->bindParam(':room_id', $_POST['new_room_id']);
+            $updateStmt->bindParam(':reservation_id', $reservation_id);
+            $updateStmt->execute();
+
+            // Redirect or display a success message
+            $_SESSION['success_message'] = "Reservation updated successfully.";
+            header("Location: reservaties.php");
+            exit;
+        } elseif ($_POST['submit'] === 'Delete') {
+            // Update the available count of the room
+            updateRoomAvailability($room_id, $reservation['available'] + 1);
+
+            // Delete the reservation
+            $deleteSql = "DELETE FROM reservations WHERE reservation_id = :reservation_id";
+            $deleteStmt = $PDO->prepare($deleteSql);
+            $deleteStmt->bindParam(':reservation_id', $reservation_id);
+            $deleteStmt->execute();
+
+            // Redirect or display a success message
+            $_SESSION['success_message'] = "Reservation deleted successfully.";
+            header("Location: reservaties.php");
+            exit;
         }
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -129,6 +152,8 @@ if (isset($_POST['sendEmail'])) {
                 <table>
                     <center>
                         <h1>All Reservations</h1>
+                        <p>You can update anything here and delete reservations. <br> Don't randomly press buttons.</p>
+
                     </center>
                     <thead>
                         <tr>
@@ -148,18 +173,18 @@ if (isset($_POST['sendEmail'])) {
                                     <td><?php echo $reservation['reservation_id']; ?></td>
                                     <td><?php echo $reservation['username']; ?></td>
                                     <td>
-                                        <select name="room_type">
+                                        <select name="new_room_id">
                                             <?php
-                                            // Fetch all room types from the rooms table
-                                            $roomTypesSql = "SELECT room_type FROM rooms";
-                                            $roomTypesStmt = $PDO->prepare($roomTypesSql);
-                                            $roomTypesStmt->execute();
-                                            $roomTypes = $roomTypesStmt->fetchAll(PDO::FETCH_COLUMN);
+                                            // Fetch available rooms from the database
+                                            $roomsSql = "SELECT * FROM rooms WHERE available > 0";
+                                            $roomsStmt = $PDO->prepare($roomsSql);
+                                            $roomsStmt->execute();
+                                            $rooms = $roomsStmt->fetchAll(PDO::FETCH_ASSOC);
 
                                             // Generate the options for the dropdown
-                                            foreach ($roomTypes as $roomType) {
-                                                $selected = ($roomType === $reservation['room_type']) ? 'selected' : '';
-                                                echo "<option value=\"$roomType\" $selected>$roomType</option>";
+                                            foreach ($rooms as $room) {
+                                                $selected = ($room['room_id'] === $reservation['room_id']) ? 'selected' : '';
+                                                echo "<option value=\"" . $room['room_id'] . "\" $selected>" . $room['room_type'] . "</option>";
                                             }
                                             ?>
                                         </select>
@@ -167,8 +192,8 @@ if (isset($_POST['sendEmail'])) {
                                     <td><input type="text" name="check_in_date" value="<?php echo $reservation['check_in_date']; ?>"></td>
                                     <td><input type="text" name="check_out_date" value="<?php echo $reservation['check_out_date']; ?>"></td>
                                     <td>
-                                        <button type="submit" name="submit" value="update">Update</button>
-                                        <button type="submit" name="submit" value="delete">Delete</button>
+                                        <button type="submit" name="submit" value="Update">Update</button>
+                                        <button type="submit" name="submit" value="Delete">Delete</button>
                                         <button type="submit" name="sendEmail" value="true" class="mail-button">Send Email</button>
                                     </td>
                                 </form>
@@ -189,7 +214,7 @@ if (isset($_POST['sendEmail'])) {
     <script>
         var mailButtons = document.getElementsByClassName("mail-button");
         var printButton = document.getElementsByClassName("print-button")[0];
-        
+
         for (var i = 0; i < mailButtons.length; i++) {
             mailButtons[i].addEventListener("click", function() {
                 printButton.style.display = "none";

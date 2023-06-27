@@ -107,6 +107,12 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="rooms-container">
+        <br>
+        <center>
+            <h1>Make a Reservation</h1>
+                <p>Make your reservation now and enjoy the exotic rooms. <br> Click the images.</p>
+        </center>
+        <br>
             <?php foreach ($rooms as $room) { ?>
                 <div class="room">
                     <div class="room-image">

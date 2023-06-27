@@ -18,9 +18,13 @@ session_start();
     </header>
 
     <div class="homepage-container">
-        <h2>Welcome to Hotel Ter Duin</h2>
+        <h1>Welcome to Hotel Ter Duin</h1>
         <p>Experience the epitome of luxury at Hotel Ter Duin. Nestled in a breathtaking location, our hotel offers an idyllic retreat for relaxation, rejuvenation, and memorable experiences. Immerse yourself in unparalleled comfort and impeccable service as you embark on a journey of indulgence.</p>
-
+        <br>
+        <center>
+            <h1>Make a Reservation</h1>
+                <p>Make your reservation now and enjoy the exotic rooms. <br> Click the images.</p>
+        </center>
         <div class="room-boxes">
             <div class="room-box">
                 <a href="products.php">

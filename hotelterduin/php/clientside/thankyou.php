@@ -42,7 +42,7 @@ function sendEmail($toEmail, $toName, $subject, $body)
         $mail->Port       = 587;
 
         //Recipients
-        $mail->setFrom('hamoodhabibitesting@outlook.com', 'Factuur Hotel ter Duin'); // Replace with your email address and name
+        $mail->setFrom('your-email@example.com', 'Hotel Invoice'); // Replace with your email address and name
         $mail->addAddress($toEmail, $toName);
 
         //Content
@@ -53,7 +53,6 @@ function sendEmail($toEmail, $toName, $subject, $body)
         $mail->send();
         return true;
     } catch (Exception $e) {
-        echo "Email could not be sent. Error: {$mail->ErrorInfo}";
         return false;
     }
 }
@@ -65,7 +64,7 @@ if (isset($_POST['sendEmail'])) {
     $subject = "Invoice";
     $body    = "<html><head><style>" . file_get_contents("../../css/factuur.css") . "</style></head><body><div class='main'>";
     foreach ($invoices as $invoice) {
-        $body .= "<h1>Factuur</h1>";
+        $body .= "<h1>Invoice</h1>";
         $body .= "<ul>";
         $body .= "<li><strong>Username:</strong> " . $invoice['username'] . "</li>";
         $body .= "<li><strong>Address:</strong> " . $invoice['address'] . "</li>";
@@ -80,9 +79,13 @@ if (isset($_POST['sendEmail'])) {
     $body .= "</div></body></html>";
 
     if (sendEmail($toEmail, $toName, $subject, $body)) {
-        echo "Email sent successfully.";
+        $_SESSION['success_message'] = "Invoice sent successfully.";
+        header("Location: gegevens.php");
+        exit;
     } else {
-        echo "Failed to send email.";
+        $_SESSION['error_message'] = "Failed to send invoice. Please try again later.";
+        header("Location: gegevens.php");
+        exit;
     }
 }
 ?>
@@ -91,7 +94,7 @@ if (isset($_POST['sendEmail'])) {
 <html lang="en">
 
 <head>
-    <title>Factuur</title>
+    <title>Invoice</title>
     <link rel="stylesheet" href="../../css/style.css">
     <link rel="stylesheet" href="../../css/navbar.css">
     <link rel="stylesheet" href="../../css/factuur.css">
@@ -113,7 +116,7 @@ if (isset($_POST['sendEmail'])) {
     <main class="main">
         <?php $counter = 1; ?>
         <?php foreach ($invoices as $invoice) { ?>
-            <h1>Factuur <?php echo $counter; ?></h1>
+            <h1>Invoice <?php echo $counter; ?></h1>
             <ul>
                 <li><strong>Username:</strong> <?php echo $invoice['username']; ?></li>
                 <li><strong>Address:</strong> <?php echo $invoice['address']; ?></li>
@@ -127,7 +130,7 @@ if (isset($_POST['sendEmail'])) {
             <?php $counter++; ?>
         <?php } ?>
 
-        <button class="print-button" onclick="window.print()">Print Factuur</button>
+        <button class="print-button" onclick="window.print()">Print Invoice</button>
 
         <?php if (!isset($_POST['sendEmail'])) { ?>
             <div class="email-form">
