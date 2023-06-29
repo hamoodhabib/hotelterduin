@@ -34,15 +34,14 @@ function sendEmail($toEmail, $toName, $subject, $body)
     try {
         //Server settings
         $mail->isSMTP();
-        $mail->Host       = 'smtp.office365.com'; // Replace with your SMTP server
+        $mail->Host       = 'smtp.office365.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'hamoodhabibitesting@outlook.com'; // Replace with your email address
-        $mail->Password   = 'hamoodhabibi69'; // Replace with your email password
+        $mail->Username   = 'hamoodhabibitesting@outlook.com'; 
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
         //Recipients
-        $mail->setFrom('your-email@example.com', 'Hotel Invoice'); // Replace with your email address and name
+        $mail->setFrom('hamoodhabibitesting@outlook.com', 'Invoice Hotel ter Duin'); 
         $mail->addAddress($toEmail, $toName);
 
         //Content
@@ -80,11 +79,11 @@ if (isset($_POST['sendEmail'])) {
 
     if (sendEmail($toEmail, $toName, $subject, $body)) {
         $_SESSION['success_message'] = "Invoice sent successfully.";
-        header("Location: gegevens.php");
+        header("Location: thankyou.php");
         exit;
     } else {
         $_SESSION['error_message'] = "Failed to send invoice. Please try again later.";
-        header("Location: gegevens.php");
+        header("Location: thankyou.php");
         exit;
     }
 }

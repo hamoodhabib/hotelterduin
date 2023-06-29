@@ -105,13 +105,13 @@ $rooms = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <input type="submit" name="submit" value="Make Reservation">
             </form>
         </div>
-
-        <div class="rooms-container">
         <br>
         <center>
             <h1>Make a Reservation</h1>
                 <p>Make your reservation now and enjoy the exotic rooms. <br> Click the images.</p>
         </center>
+        <div class="rooms-container">
+        
         <br>
             <?php foreach ($rooms as $room) { ?>
                 <div class="room">

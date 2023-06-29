@@ -69,7 +69,7 @@ if (isset($_POST['submit'])) {
 
                     // Redirect or display a success message
                     $_SESSION['success_message'] = "Reservation updated successfully.";
-                    header("Location: gegevens.php");
+                    header("Location: reservatie.php");
                     exit;
                 } else {
                     echo "Invalid check-out date. Please select a date within the allowed range.";
